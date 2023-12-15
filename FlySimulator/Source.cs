@@ -48,7 +48,7 @@ namespace FlySimulator
 			else { np.tank.Change_Fuel_Level = np.tank.Volume; }
 			Console.Write("Введите длину взлетно-посадочной полосы м (0 - знач. по умолчанию): ");
 			temp = Convert.ToInt32(Console.ReadLine());
-			if (temp > 500 && temp <= 4000)
+			if (temp >= 500 && temp <= 4000)
 			{
 				airPortLenght = temp;
 			}
@@ -149,18 +149,18 @@ namespace FlySimulator
 					}
 					if (np.gear.BrakeIsOn && timeWindow > 0)
 					{
-						pilot.exercises.Add($"Упражнение  {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Тормоз был установлен.");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Тормоз был установлен.");
 						flyPhase++;
 					}
 					else if (np.gear.BrakeIsOn && timeWindow <= 0 || np.airPlaneOnGround == false || np.CURRSPEED != 0)
 					{
-						pilot.exercises.Add($"Упражнение  {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Тормоз не был установлен");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Тормоз не был установлен");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 					}
 					else if (!np.gear.BrakeIsOn && timeWindow <= 0)
 					{
-						pilot.exercises.Add($"Упражнение  {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Тормоз не был установлен");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Тормоз не был установлен");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 					}
@@ -192,7 +192,7 @@ namespace FlySimulator
 					}
 					else if (np.engine.CURRENTTHRUST <= 10000 && timeWindow <= 0 || np.airPlaneOnGround == false)
 					{
-						pilot.exercises.Add($"Упражнение  {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Достаточная тяга двигателя не была набрана и равнялась {Convert.ToString(np.engine.CURRENTTHRUST)} кгс");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Достаточная тяга двигателя не была набрана и равнялась {Convert.ToString(np.engine.CURRENTTHRUST)} кгс");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 					}
@@ -236,7 +236,7 @@ namespace FlySimulator
 					}
 					else if (!np.airplaneInAir && timeWindow <= 0)
 					{
-						pilot.exercises.Add($"Упражнение  {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Тормоз не был отпущен в заданное время.");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Тормоз не был отпущен в заданное время.");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 					}
@@ -276,7 +276,7 @@ namespace FlySimulator
 					}
 					else if (!np.gear.GearHidden && timeWindow <= 0)
 					{
-						pilot.exercises.Add($"Упражнение  {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Шасси не были убраны.");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} НЕ выполнено на {Convert.ToString(count)} секунде полета. Шасси не были убраны.");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 					}
@@ -295,20 +295,20 @@ namespace FlySimulator
 					Commands(Convert.ToString($"Рекомендованная высота: {temp_h} Временное окно:{timeWindow}"), dispatcher_1);
 					if (np.CURRHEIGHT >= temp_h - 200 && np.CURRHEIGHT <= temp_h + 200 && timeWindow > 0)
 					{
-						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)}");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м");
 						flyPhase++;
 
 					}
 					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 300 && Math.Abs(np.CURRHEIGHT - temp_h) < 600 && timeWindow < 0)
 					{
-						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)} отклонение не более 600 м");
+						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 600 м");
 						pilot.PenaltyPoints += 25;
 						flyPhase++;
 
 					}
 					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 600 && Math.Abs(np.CURRHEIGHT - temp_h) < 1000 && timeWindow < 0)
 					{
-						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)} отклонение не более 1000 м");
+						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 1000 м");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 
@@ -336,19 +336,19 @@ namespace FlySimulator
 					Commands(Convert.ToString($"Рекомендованная высота: {temp_h} Временное окно:{timeWindow}"), dispatcher_2);
 					if (np.CURRHEIGHT >= temp_h - 200 && np.CURRHEIGHT <= temp_h + 200 && timeWindow > 0)
 					{
-						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)}");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м");
 						flyPhase++;
 					}
 					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 300 && Math.Abs(np.CURRHEIGHT - temp_h) < 600 && timeWindow < 0)
 					{
-						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)} отклонение не более 600 м");
+						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 600 м");
 						pilot.PenaltyPoints += 25;
 						flyPhase++;
 
 					}
 					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 600 && Math.Abs(np.CURRHEIGHT - temp_h) < 1000 && timeWindow < 0)
 					{
-						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)} отклонение не более 1000 м");
+						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 1000 м");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 
@@ -376,12 +376,12 @@ namespace FlySimulator
 					Commands(Convert.ToString($"Снижайтесь до отметки {temp_h} м Временное окно:{timeWindow}"), dispatcher_2);
 					if (np.CURRHEIGHT <= temp_h + 200 && np.CURRHEIGHT >= temp_h - 200 && timeWindow > 0)
 					{
-						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)}");
+						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м");
 						flyPhase++;
 					}
 					else if ((np.CURRHEIGHT >= temp_h + 200 || np.CURRHEIGHT <= temp_h - 200) && timeWindow <= 0)
 					{
-						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)}");
+						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 					}
@@ -433,7 +433,7 @@ namespace FlySimulator
 						pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ! Шасси не были выпущены");
 						break;
 					}
-					if (np.airplaneCrashed) { pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ"); break; }
+					if (np.airplaneCrashed) { pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ! Шасси не были выпущены"); break; }
 					np.getInfo();
 					Thread.Sleep(1000);
 				} while (flyPhase != 9);
@@ -474,7 +474,7 @@ namespace FlySimulator
 
 			//Запись в файл
 			XmlSerializer pilotCard = new XmlSerializer(typeof(List<string>));
-			filename = $"Pilot_card_{Convert.ToString(DateTime.Now.ToShortDateString())}.xml";
+			filename = $"Pilot_card_{Convert.ToString(DateTime.Now.ToShortDateString())}_{Convert.ToString(DateTime.Now.Hour)}_{Convert.ToString(DateTime.Now.Minute)}.xml";
 			try
 			{
 				using (Stream pilotCardStream = File.Create(filename))
