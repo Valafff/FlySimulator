@@ -35,7 +35,8 @@ namespace FlySimulator
 
 		public override string ToString()
 		{
-			return $"Объем бака {VOLUME} л\nОбъем топлива в баке {fuelLevel} л";
+			//return $"Объем бака {VOLUME} л\nОбъем топлива в баке {fuelLevel} л";
+			return $"Объем топлива в баке {fuelLevel} л";
 		}
 
 		public Tank(double arg_vol, double arg_fuelLevel)

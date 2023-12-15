@@ -45,7 +45,9 @@ namespace FlySimulator
 			}
 			else
 			{
+				Console.ForegroundColor = ConsoleColor.Red;
 				status = "ОСТАНОВЛЕН";
+				Console.ResetColor();
 			}
 			return $"Двигатель {status}! Расход топлива {CONSUMPTIONPERSECOND} л/c\n" +
 				$"Тяга двигателя {CURRENTTHRUST} кгс";

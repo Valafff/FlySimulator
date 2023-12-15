@@ -29,8 +29,6 @@ namespace FlySimulator
 			Random rnd = new Random();
 			Source Examenation = new Source();
 			Examenation.StartExam();
-			Console.Clear();
-			Console.Write("Нажмите ENTER для начала экзамена или ESC для выхода: ");
 			Examenation.Help();
 
 			Examenation.np.engine.isStarted = false;
@@ -63,7 +61,7 @@ namespace FlySimulator
 				{
 					Examenation.np.gear.BrakeIsOn = false;
 				}
-				if (key == ConsoleKey.C && Examenation.np.gear.GearHidden == false)
+				if (key == ConsoleKey.C && !Examenation.np.gear.GearHidden && !Examenation.np.airPlaneOnGround)
 				{
 					Examenation.np.gear.GearHidden = true;
 				}

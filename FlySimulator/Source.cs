@@ -88,19 +88,23 @@ namespace FlySimulator
 		//	Commands(step0);
 		//}
 
+		//Console.WriteLine("******************************************");
+
 		//Команды
 		public void Commands(string arg, Dispatcher dis)
 		{
 			Console.SetCursorPosition(0, 16);
 			Console.WriteLine($"Комманды диспетчера {dis.Name}");
 			Console.SetCursorPosition(0, 17);
-			Console.WriteLine("******************************************");
+			Console.WriteLine("*********************************************************");
 			Console.SetCursorPosition(0, 18);
 			Console.WriteLine($"                                                              ");
 			Console.SetCursorPosition(0, 18);
+			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine($"{arg}");
+			Console.ResetColor();
 			Console.SetCursorPosition(0, 19);
-			Console.WriteLine("******************************************");
+			Console.WriteLine("*********************************************************");
 			Console.SetCursorPosition(0, 20);
 			Console.WriteLine($"Штрафные баллы пилота {pilot.Name}: {pilot.PenaltyPoints}");
 		}
@@ -299,21 +303,19 @@ namespace FlySimulator
 						flyPhase++;
 
 					}
-					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 300 && Math.Abs(np.CURRHEIGHT - temp_h) < 600 && timeWindow < 0)
+					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 200 && Math.Abs(np.CURRHEIGHT - temp_h) < 600 && timeWindow <= 0)
 					{
 						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 600 м");
 						pilot.PenaltyPoints += 25;
 						flyPhase++;
-
 					}
-					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 600 && Math.Abs(np.CURRHEIGHT - temp_h) < 1000 && timeWindow < 0)
+					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 600 && Math.Abs(np.CURRHEIGHT - temp_h) < 1000 && timeWindow <= 0)
 					{
 						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 1000 м");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
-
 					}
-					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 1000 && timeWindow < 0)
+					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 1000 && timeWindow <= 0)
 					{
 						np.airplaneCrashed = true;
 						pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ! Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)} отклонение более 1000 м");
@@ -339,21 +341,21 @@ namespace FlySimulator
 						pilot.exercises.Add($"Упражнение {Convert.ToString(flyPhase + 1)} выполнено на {Convert.ToString(count)} секунде полета. Была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м");
 						flyPhase++;
 					}
-					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 300 && Math.Abs(np.CURRHEIGHT - temp_h) < 600 && timeWindow < 0)
+					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 200 && Math.Abs(np.CURRHEIGHT - temp_h) < 600 && timeWindow <= 0)
 					{
 						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 600 м");
 						pilot.PenaltyPoints += 25;
 						flyPhase++;
 
 					}
-					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 600 && Math.Abs(np.CURRHEIGHT - temp_h) < 1000 && timeWindow < 0)
+					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 600 && Math.Abs(np.CURRHEIGHT - temp_h) < 1000 && timeWindow <= 0)
 					{
 						pilot.exercises.Add($"Высота НЕ выдержана на {Convert.ToString(count)} секунде полета. Не была достигнута рекомендованная высота: {Convert.ToString(temp_h)} м Фактическая высота: {Convert.ToString(np.CURRHEIGHT)} м Отклонение не более 1000 м");
 						pilot.PenaltyPoints += 50;
 						flyPhase++;
 
 					}
-					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 1000 && timeWindow < 0)
+					else if (Math.Abs(np.CURRHEIGHT - temp_h) >= 1000 && timeWindow <= 0)
 					{
 						np.airplaneCrashed = true;
 						pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ! Не была достигнута рекомендованная высота {Convert.ToString(np.CURRHEIGHT)} отклонение более 1000 м");
@@ -468,9 +470,9 @@ namespace FlySimulator
 			}
 			//Разбор полетов
 			if (np.airplaneCrashed) { pilot.PenaltyPoints += 1000; }
-			pilot.exercises.Add($"Экзаменуемый пилот набрал {Convert.ToString(pilot.PenaltyPoints)} штрафных баллов");
-			if (pilot.PenaltyPoints < 1000) { pilot.exercises.Add($"Пилот {Convert.ToString(pilot.Name)} допущен к полетам"); }
-			else { pilot.exercises.Add($"Пилот {Convert.ToString(pilot.Name)} непригоден к полетам"); }
+			pilot.exercises.Add($"Экзаменуемый пилот набрал {Convert.ToString(pilot.PenaltyPoints)} штрафных баллов.");
+			if (pilot.PenaltyPoints < 1000) { pilot.exercises.Add($"Пилот {Convert.ToString(pilot.Name)} допущен к полетам."); }
+			else { pilot.exercises.Add($"Пилот {Convert.ToString(pilot.Name)} непригоден к полетам."); }
 
 			//Запись в файл
 			XmlSerializer pilotCard = new XmlSerializer(typeof(List<string>));
@@ -482,7 +484,7 @@ namespace FlySimulator
 					pilotCard.Serialize(pilotCardStream, pilot.exercises);
 				}
 				Console.Clear();
-				Console.WriteLine("Отчет сохранен");
+				Console.WriteLine($"Отчет сохранен под именем {filename}");
 				Console.WriteLine("Нажмите ESC для выхода или R для чтения последнего файла");
 			}
 			catch (Exception)

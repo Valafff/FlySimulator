@@ -23,7 +23,7 @@ namespace FlySimulator
 		public bool landing = false;
 
 		//Фазы полета
-		public bool airplaneCrashed  { get; set; }
+		public bool airplaneCrashed { get; set; }
 		public bool airplaneInAir { get; set; }
 		public bool airPlaneOnGround { get; set; }
 
@@ -102,14 +102,23 @@ namespace FlySimulator
 			Console.SetCursorPosition(20, 0);
 			Console.WriteLine("Телеметрия:");
 			Console.WriteLine();
+			if (engine.isStarted) { Console.ForegroundColor = ConsoleColor.Green; }
 			Console.WriteLine(engine);
+			Console.ResetColor();
 			Console.WriteLine("********************************");
+			Console.ForegroundColor = ConsoleColor.Green;
 			Console.WriteLine($"Скорость самолета {CURRSPEED} км/ч");
 			Console.WriteLine($"Высота полета {CURRHEIGHT} м");
+			Console.ResetColor();
 			Console.WriteLine("********************************");
+			if (tank.Change_Fuel_Level <= 2000) { Console.ForegroundColor = ConsoleColor.Red; }
+			else { Console.ForegroundColor = ConsoleColor.Green; }
 			Console.WriteLine(tank);
+			Console.ResetColor();
 			Console.WriteLine("********************************");
+			Console.ForegroundColor = ConsoleColor.Blue;
 			Console.WriteLine(gear);
+			Console.ResetColor();
 		}
 
 
@@ -129,14 +138,14 @@ namespace FlySimulator
 					wasStarted = true;
 					if (engine.CURRENTTHRUST == 0)
 					{
-						CURRHEIGHT -= rnd.Next(300,400);
-						if ( CURRHEIGHT <= 0 && airplaneInAir == true && !landing) { airplaneCrashed = true; break; }
+						CURRHEIGHT -= rnd.Next(300, 400);
+						if (CURRHEIGHT <= 0 && airplaneInAir == true && !landing) { airplaneCrashed = true; break; }
 					}
-					if (airplaneInAir && CURRHEIGHT <=0 && !landing){ airplaneCrashed = true; break;}
+					if (airplaneInAir && CURRHEIGHT <= 0 && !landing) { airplaneCrashed = true; break; }
 					Thread.Sleep(1000);
 				}
-                //Console.WriteLine("OK");
-                if (tank.Change_Fuel_Level == 0)
+				//Console.WriteLine("OK");
+				if (tank.Change_Fuel_Level == 0)
 				{
 					//Console.WriteLine("Топливо закончилось");
 					engine.isStarted = false;
@@ -151,13 +160,13 @@ namespace FlySimulator
 				if (!engine.isStarted || engine.CURRENTTHRUST == 0)
 				{
 					CURRHEIGHT -= rnd.Next(300, 400);
-					if (CURRHEIGHT <= 0 && airplaneInAir == true && !landing) { airplaneCrashed = true;}
+					if (CURRHEIGHT <= 0 && airplaneInAir == true && !landing) { airplaneCrashed = true; }
 				}
-				if(airplaneCrashed && !landing)
+				if (airplaneCrashed && !landing)
 				{
-                    Console.WriteLine("САМОЛЕТ ПОТЕРПЕЛ КРУШЕНИЕ");
+					Console.WriteLine("САМОЛЕТ ПОТЕРПЕЛ КРУШЕНИЕ");
 					break;
-                }
+				}
 				Thread.Sleep(1000);
 			} while (true/*!getout*/);
 		}
