@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Airpalane.cs" />
     <Compile Include="Dispatcher.cs" />
+    <Compile Include="flightRecorder.cs" />
     <Compile Include="JetEngine.cs" />
     <Compile Include="LandingGear.cs" />
     <Compile Include="Pilot.cs" />

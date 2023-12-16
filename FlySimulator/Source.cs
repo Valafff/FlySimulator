@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
+//using System.Security.Cryptography.X509Certificates;
 //using System.Collections.Generic;
 //using System.Collections.Specialized;
 //using System.Linq;
 //using System.Text;
 using System.Threading;
-using System.Web;
+//using System.Web;
 //using System.Threading.Tasks;
 //using System.Xml.Linq;
 using System.Xml.Serialization;
+using static FlySimulator.flightRecorder;
 
 namespace FlySimulator
 {
@@ -26,8 +27,12 @@ namespace FlySimulator
 		public Airpalane np = new Airpalane();
 		public int flyPhase = 0;
 		string filename;
+		
 		public void StartExam()
 		{
+			//ПОДПИСАЛ МЕТОД ЧЕРНОГО ЯЩИКА НА СОБЫТИЕ
+			np.toRecordEvent += np.recorder.record;
+
 			Console.WriteLine("Программа \"Тренажер пилота самолета\"");
 			Console.Write("Введите имя экзаменуемого пилота: ");
 			string name = Console.ReadLine();
@@ -98,7 +103,7 @@ namespace FlySimulator
 			Console.SetCursorPosition(0, 17);
 			Console.WriteLine("*********************************************************");
 			Console.SetCursorPosition(0, 18);
-			Console.WriteLine($"                                                              ");
+			Console.WriteLine($"                                                                                       ");
 			Console.SetCursorPosition(0, 18);
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine($"{arg}");
@@ -324,10 +329,23 @@ namespace FlySimulator
 					if (np.airplaneCrashed) { pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ"); break; }
 					np.getInfo();
 					Thread.Sleep(1000);
-
 				} while (flyPhase != 5);
 				if (np.airplaneCrashed) { break; }
+
+				//Свободный полет
+				timeWindow = timeToDoExecies;
+				do
+				{
+					count++;
+					timeWindow--;
+					Commands(Convert.ToString($"Хорошего полета, вас будет встречать диспетчер {dispatcher_2.Name}. Временное окно:{timeWindow}"), dispatcher_1);
+					if (np.airplaneCrashed) { pilot.exercises.Add($"САМОЛЕТ РАЗБИЛСЯ"); break; }
+					np.getInfo();
+					Thread.Sleep(1000);
+				} while (timeWindow >0);
 				pilot.exercises.Add($"Диспетчер №2: {Convert.ToString(dispatcher_2.Name)}");
+
+
 				//Полет корректровка высоты диспетчер 2
 				timeWindow = timeToDoExecies;
 				temp_h = 7 * np.CURRSPEED - (200 - rnd.Next(0, 400));
@@ -467,14 +485,16 @@ namespace FlySimulator
 				}
 				while (true);
 				if (np.airplaneCrashed) { break; }
+				np.getInfo();
 			}
+			np.getout = true;
 			//Разбор полетов
 			if (np.airplaneCrashed) { pilot.PenaltyPoints += 1000; }
 			pilot.exercises.Add($"Экзаменуемый пилот набрал {Convert.ToString(pilot.PenaltyPoints)} штрафных баллов.");
 			if (pilot.PenaltyPoints < 1000) { pilot.exercises.Add($"Пилот {Convert.ToString(pilot.Name)} допущен к полетам."); }
 			else { pilot.exercises.Add($"Пилот {Convert.ToString(pilot.Name)} непригоден к полетам."); }
 
-			//Запись в файл
+			//Запись в файл карточки пилота
 			XmlSerializer pilotCard = new XmlSerializer(typeof(List<string>));
 			filename = $"Pilot_card_{Convert.ToString(DateTime.Now.ToShortDateString())}_{Convert.ToString(DateTime.Now.Hour)}_{Convert.ToString(DateTime.Now.Minute)}.xml";
 			try
@@ -491,7 +511,10 @@ namespace FlySimulator
 			{
 				throw;
 			}
+			np.recorder.recorderSerialize();
 		}
+
+
 		public void readFile()
 		{
 			XmlSerializer readPilotCard = new XmlSerializer(typeof(List<string>));

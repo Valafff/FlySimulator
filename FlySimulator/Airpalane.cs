@@ -8,12 +8,18 @@ using System.Threading.Tasks;
 
 namespace FlySimulator
 {
+
 	internal class Airpalane
 	{
+
 		public Tank tank = new Tank(50000, 1000);
 		public JetEngine engine = new JetEngine(15000, 0, 1);
 		public LandingGear gear = new LandingGear(false);
-
+		//ЧЕРНЫЙ ЯЩИК КУДА ПИШУТСЯ СОБЫТИЯ. ЧЕРНЫЙ ЯЩИК ПОДПИСАН НА РАЗНЫЕ СОБЫТИЯ: создал делегат, создал событие, подписал метод record на событие(файл source), указал условие вызова события
+		public flightRecorder recorder = new flightRecorder();
+		public delegate void ToRecord(bool arg_airPlaneOnGround, bool arg_airplaneInAir, int arg_speed, int arg_height, double arg_fuel, double arg_consumption);
+		public event ToRecord toRecordEvent;
+		
 		readonly double max_speed;
 		readonly int max_height;
 
@@ -21,6 +27,7 @@ namespace FlySimulator
 		public bool time_to_thrust = false;
 		public bool time_to_up = false;
 		public bool landing = false;
+		public bool getout = false;
 
 		//Фазы полета
 		public bool airplaneCrashed { get; set; }
@@ -71,6 +78,20 @@ namespace FlySimulator
 			if (!gear.BrakeIsOn /*&& CURRHEIGHT != 0*/) { CURRSPEED = (int)(percent * MAX_SPEED); }
 		}
 
+		//Метод который вызывает событие - записать данные в черный ящик
+		public void mainEventChanges()
+		{
+			if (recorder.temp.controlSpeed != CURRSPEED ||
+				recorder.temp.controlHeight != CURRHEIGHT ||
+				recorder.temp.controlFuelLevel != tank.Change_Fuel_Level ||
+				recorder.temp.controlEngineThrust != engine.CURRENTTHRUST ||
+				recorder.temp.inAir != airplaneInAir ||
+				recorder.temp.onGround != airPlaneOnGround)
+			{
+				toRecordEvent(airPlaneOnGround, airplaneInAir, CURRSPEED, CURRHEIGHT, tank.Change_Fuel_Level, engine.CURRENTTHRUST);
+			}
+		}
+
 
 		public void heightTable(int add_h)
 		{
@@ -119,13 +140,14 @@ namespace FlySimulator
 			Console.ForegroundColor = ConsoleColor.Blue;
 			Console.WriteLine(gear);
 			Console.ResetColor();
+			//ПРОВЕРКА НА ИЗМЕНЕНИЕ СВОЙСТВ САМОЛЕТА И ЕГО УЗЛОВ В СЛУЧАЕ ИЗМЕНЕНИЯ ВЫЗЫВАЕТСЯ СОБЫТИЕ СДЕЛАТЬ ЗАПИСЬ В ЧЕРНЫЙ ЯЩИК
+			mainEventChanges();
 		}
 
 
 		public void MAINSTATUS()
 		{
 			Random rnd = new Random();
-			//bool getout = false;
 			bool wasStarted = false;
 			do
 			{
@@ -168,7 +190,7 @@ namespace FlySimulator
 					break;
 				}
 				Thread.Sleep(1000);
-			} while (true/*!getout*/);
+			} while (!getout);
 		}
 	}
 }
